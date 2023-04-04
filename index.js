@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -9,11 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// user: bookBazar
-// pass: KSMa4aKkygAA1AEx
-
-
-const uri = "mongodb+srv://bookBazar:KSMa4aKkygAA1AEx@cluster0.laf8zrf.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.laf8zrf.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -46,3 +43,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`puraton boi bazar is running on ${port}`);
 })
+
+
+// git remote add origin https://github.com/Mamun-Ashraf/puraton-boi-bazar-server.git
+// git push -u origin main
