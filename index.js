@@ -49,7 +49,12 @@ async function run() {
             res.send(users)
         })
 
-
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email };
+            const user = await usersCollection.findOne(filter);
+            res.send({ isAdmin: user?.role === 'admin' });
+        })
 
         app.get('/users/allbuyers', async (req, res) => {
             const userType = req.query.userType;
@@ -58,11 +63,25 @@ async function run() {
             res.send(allbuyers);
         })
 
+        app.get('/users/allbuyers/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email };
+            const user = await usersCollection.findOne(filter);
+            res.send({ isBuyer: user?.userType === 'Buyer' })
+        })
+
         app.get('/users/allsellers', async (req, res) => {
             const userType = req.query.userType;
             const filter = { userType }
             const allsellers = await usersCollection.find(filter).toArray();
             res.send(allsellers);
+        })
+
+        app.get('/users/allsellers/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email };
+            const user = await usersCollection.findOne(filter);
+            res.send({ isSeller: user?.userType === 'Seller' })
         })
 
         app.post('/users', async (req, res) => {
