@@ -32,6 +32,28 @@ async function run() {
             res.send(category);
         })
 
+        app.get('/categoryBook/:categoryname', async (req, res) => {
+            const categoryName = req.params.categoryname;
+            const filter = { categoryName: categoryName };
+            const result = await categoryCollection.findOne(filter);
+            console.log(result);
+            res.send(result);
+        })
+
+        app.put('/category/:categoryname', async (req, res) => {
+            const categoryName = req.params.categoryname;
+            const category = req.body;
+            const filter = { categoryName: categoryName };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    categoryBooks: category
+                }
+            }
+            const result = await categoryCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
         app.get('/jwt', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -137,7 +159,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`puraton boi bazar is running on ${port}`);
 })
-
-
-// git remote add origin https://github.com/Mamun-Ashraf/puraton-boi-bazar-server.git
-// git push -u origin main
