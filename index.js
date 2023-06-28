@@ -21,8 +21,24 @@ async function run() {
 
         app.get('/category', async (req, res) => {
             const query = {};
-            const categories = await categoryCollection.find().toArray();
+            const categories = await categoryCollection.find(query).toArray();
             res.send(categories);
+        })
+
+        app.get('/myProducts/:sellersemail', async (req, res) => {
+            const email = req.params.sellersemail;
+            console.log(email);
+            const query = { sellersEmail: email };
+            const result = await categoryCollection.find(query).toArray();
+            console.log(result);
+            res.send(result);
+        })
+
+        app.get('/categoryTitle', async (req, res) => {
+            const query = {};
+            const projection = { categoryName: 1 };
+            const result = await categoryCollection.find().project(projection).toArray();
+            res.send(result);
         })
 
         app.get('/category/:id', async (req, res) => {
@@ -36,7 +52,6 @@ async function run() {
             const categoryName = req.params.categoryname;
             const filter = { categoryName: categoryName };
             const result = await categoryCollection.findOne(filter);
-            console.log(result);
             res.send(result);
         })
 
