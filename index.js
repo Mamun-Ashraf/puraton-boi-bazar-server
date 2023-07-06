@@ -18,21 +18,7 @@ async function run() {
     try {
         const categoryCollection = client.db('bookBazar').collection('books');
         const usersCollection = client.db('bookBazar').collection('users');
-
-        app.get('/category', async (req, res) => {
-            const query = {};
-            const categories = await categoryCollection.find(query).toArray();
-            res.send(categories);
-        })
-
-        app.get('/myProducts/:sellersemail', async (req, res) => {
-            const email = req.params.sellersemail;
-            console.log(email);
-            const query = { sellersEmail: email };
-            const result = await categoryCollection.find(query).toArray();
-            console.log(result);
-            res.send(result);
-        })
+        const myOrdersCollection = client.db('bookBazar').collection('myOrders');
 
         app.get('/categoryTitle', async (req, res) => {
             const query = {};
@@ -159,6 +145,33 @@ async function run() {
             const result = await usersCollection.deleteOne(filter);
             console.log(result);
             res.send(result);
+        })
+
+        app.get('/myProducts', async (req, res) => {
+            const query = {};
+            const ProductsData = await categoryCollection.find(query).toArray();
+            res.send(ProductsData);
+
+        })
+
+        app.get('/myOrders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const myOrders = await myOrdersCollection.find(query).toArray();
+            res.send(myOrders);
+        })
+
+        app.post('/myOrders', async (req, res) => {
+            const myOrders = req.body;
+            const result = await myOrdersCollection.insertOne(myOrders);
+            res.send(result);
+        })
+
+        app.delete('/myOrders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const myOrders = await myOrdersCollection.deleteOne(query);
+            res.send(myOrders);
         })
     }
     finally {
